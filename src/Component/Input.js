@@ -9,9 +9,26 @@ export default function Input(props) {
                        rendercomponet = <input type= {props.type} name={props.name}  className={props.name}
                        value ={props.value} onChange={props.onChange} {...props} />
                        break;
-                       case "Dropdown" : 
-                       rendercomponet = <input type= {props.type} name={props.name}  className={props.name}
-                       value ={props.value} onChange={props.onChange} {...props} />
+                       case "select-one":
+                          console.log(props,"options") 
+                       rendercomponet =  <select
+                       name={props.name}
+                       className={props.className}
+                       type={props.type}
+                       
+                       value={props.value}
+                       onChange={props.onChange}
+                      
+                     >
+                        
+                       {props.elementConfig.options.map(options => {
+                         return (
+                           <option key={options.value} value={options.key}>
+                             {options.value}
+                           </option>
+                         );
+                       })}
+                     </select>
                        break;
                        case "password" : 
                        rendercomponet = <input type= {props.type} name={props.name}  className={props.name}

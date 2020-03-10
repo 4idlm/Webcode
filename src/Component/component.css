@@ -75,3 +75,47 @@
     background-color: #5cb85c;
     color: white;
   }
+input{
+  width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    position: relative;
+    outline: none;
+    box-shadow: 0 1px #FF4081;
+    border-color: #FF4081;
+    border-width: 1px;
+}
+
+.react-datepicker-wrapper {
+  display: block!important;
+  padding: 0;
+  border: 0;
+  margin-top: 9px;
+}
+
+.DOB_lable{
+  position: absolute;
+    bottom: 23px;
+    left: 0;
+    font-size: 11px;
+    font-size: 12px;
+    color: #FF4081;
+    background-color: transparent!important;
+    transform: translateY(0px);
+}
+    
+input[type="radio"]{
+  box-shadow: none;
+}
+.fontsize{
+font-size: 12px;
+    color: #FF4081;
+}
+.fontsizecheckbox{
+  font-size: 15px;
+    color: #FF4081;
+}
+.custom-controls{
+  text-align: left;
+}
