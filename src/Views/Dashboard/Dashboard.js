@@ -77,7 +77,7 @@ class Dashboard extends React.Component {
          'Content-Type': 'application/json',
          "Access-Control-Allow-Headers": "Content-Type" ,
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT, PATCH",
-       'Access-Control-Allow-Credentials': 'true',
+       //'Access-Control-Allow-Credentials': 'true',
     //  "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie",
       // "Access-Control-Request-Method":"*",
      // "Access-Control-Request-Headers":"Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie",
