@@ -62,6 +62,11 @@ class Modal extends React.Component {
       // })
     }
     handleChange = date => {
+    //   moment(date, "YYYY-MM-DD", true).isValid();
+    //   const regex = /^02\/(?:[01]\d|2\d)\/(?:19|20)(?:0[048]|[13579][26]|[2468][048])|(?:0[13578]|10|12)\/(?:[0-2]\d|3[01])\/(?:19|20)\d{2}|(?:0[469]|11)\/(?:[0-2]\d|30)\/(?:19|20)\d{2}|02\/(?:[0-1]\d|2[0-8])\/(?:19|20)\d{2}$/;
+    // if (!regex.test(date)) {
+    //   Status = false;
+    // }
       this.setState({
         startDate: date
       });
@@ -123,7 +128,7 @@ render(){
      <DatePicker
         selected={this.state.startDate}
         onChange={this.handleChange}
-        dateFormat='MM/dd/yyyy'  
+        dateFormat='yyyy-MM-dd'  
       />
     <label className="DOB_lable">Date Of Birth</label>
           </div>
