@@ -1,4 +1,4 @@
  const ResponseData = "";
-  
+const  Autosuggestvalue = ""
  
-export default {ResponseData}
+export default {ResponseData,Autosuggestvalue}

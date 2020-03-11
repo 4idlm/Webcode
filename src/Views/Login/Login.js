@@ -3,7 +3,7 @@ import './Login.css';
 import INPUT from '../../Component/Input';
 import sha512 from 'sha512';
 import history from '../history';
-import { async } from 'q';
+ 
 
 // "var sha512 = require('sha512')";
 
@@ -42,6 +42,18 @@ class Login extends React.Component {
    form:userInfoCopy
  })  
   }
+  componentDidMount(){
+    const bearer_token =  localStorage.getItem("AccessToken");
+    // console.log(token,"didmount")
+    if(bearer_token != undefined && bearer_token != ""){
+      history.push("/protected")
+    }
+    else{
+      history.push("/")
+    }
+
+
+  }
   Submit=(event)=>{
     event.preventDefault();
     let info = this.state.form;
@@ -53,7 +65,7 @@ class Login extends React.Component {
     password: binarycodecovertToHash
   }
    if(info.Username.value == "" && info.Password.value == "" || info.Password.value == "" || info.Password.value == "" ){
-    //  alert("vinoth")
+     alert("Please fill the values")
    }
 if(info.Password.value != ""  && info.Username.value != "" )
 {

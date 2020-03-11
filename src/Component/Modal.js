@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from '../Component/Button';
 import moment from  'moment';
-import {  useToasts } from 'react-toast-notifications'
+import ChunkData from '../Store';
  
 
 
@@ -52,9 +52,9 @@ class Modal extends React.Component {
       let {startDate,True,False,checkbox_data} = this.state ;
       
       let status = True == false && False == false ? false : true;
-      
+      console.log(ChunkData.Autosuggestvalue,"ChunkData.Autosuggestvalue")
         if(this.state.CreateHorse.Horsenumber.value == "" || this.state.CreateHorse.Color.value == "" || 
-        startDate == ""  ||status== false || checkbox_data == false ){
+        startDate == ""  ||status== false || checkbox_data == false || ChunkData.Autosuggestvalue == "" ){
          alert("please fill the value")
           // toast.error("please fill the value !", {
           //   position: toast.POSITION.TOP_LEFT
@@ -65,7 +65,7 @@ class Modal extends React.Component {
           let age = True == true ? true : False == true ? true :false ;
           let newDate = moment(startDate).format("YYYY-MM-DD");
           let data = {
-            "horse_name":"testing",
+            "horse_name":ChunkData.Autosuggestvalue,
             "horse_number":this.state.CreateHorse.Horsenumber.value ,
             "age_verified":age,
             "dob":newDate,
@@ -153,6 +153,9 @@ class Modal extends React.Component {
     let info = {...this.state.CreateHorse};
  let userInfoCopy = info;
  if(event.target.name == "Horsenumber"){
+  if (typeof event.target.value === "string") {
+    event.target.value = event.target.value.replace(/[^0-9|/]+/g, "");
+  }
  userInfoCopy.Horsenumber.value = event.target.value;
   
  }

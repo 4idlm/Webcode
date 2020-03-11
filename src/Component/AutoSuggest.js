@@ -1,5 +1,6 @@
 import React from 'react';
-const axios = require('axios');
+import chunkData from '../Store';
+// const axios = require('axios');
 
 class Autosuggest extends React.Component{
 
@@ -23,18 +24,19 @@ state={
          this.setState({
             autoSUggetHorse:value
          })
-         let Url = `http://dev.api.staller.show/v1/horses/${value}`;
+         chunkData.Autosuggestvalue = event.target.value ; 
+       //  let Url = `http://dev.api.staller.show/v1/horses/${value}`;
 
-         axios.get(Url)
-  .then(function (response) {
-    // handle success
-    console.log(response);
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-//         return fetch(Url,{ 
+//          axios.get(Url)
+//   .then(function (response) {
+//     // handle success
+//     console.log(response);
+//   })
+//   .catch(function (error) {
+//     // handle error
+//     console.log(error);
+//   })
+// //         return fetch(Url,{ 
 //       method: 'GET', // *GET, POST, PUT, DELETE, etc.
 //       mode: 'cors', // no-cors, *cors, same-origin
 //       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
