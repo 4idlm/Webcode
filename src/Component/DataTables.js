@@ -1,13 +1,13 @@
 import React  from 'react';
 import { FaUserEdit, FaRegTrashAlt} from "react-icons/fa";
- 
+import ChunkData from '../Store';
 
 class DataTables  extends React.Component {
     
     
     render() {
        
-          let f = this.props.horse.map((data,index)=>{
+          let ListData = ChunkData.ResponseData !== "" ? ChunkData.ResponseData.map((data,index)=>{
             return <tr key={index}>
               <td>{data.horse_name}</td>
             <td>{data.horse_number}</td>
@@ -16,7 +16,7 @@ class DataTables  extends React.Component {
             <td><FaUserEdit/></td>
             <td onClick={(event)=>this.props.delete(event,data.id)}><FaRegTrashAlt/></td>
             </tr>
-            })
+            }):"...Loading";
         return(
             <React.Fragment>
                 
@@ -32,7 +32,7 @@ class DataTables  extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {f}
+              {ListData}
             </tbody>
           </table>
            

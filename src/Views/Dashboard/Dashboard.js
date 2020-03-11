@@ -4,7 +4,8 @@ import Button from '../../Component/Button';
 import './Dashboard.css';
 import history from '../history';
 import Modal from '../../Component/Modal';
-const axios = require('axios');
+import { isMoment } from 'moment';
+import Store from '../../Store';
 
 class Dashboard extends React.Component {
  
@@ -21,6 +22,7 @@ class Dashboard extends React.Component {
       this.setState({
         AccessToken :bearer
       })
+    }
     fetch("http://dev.api.staller.show/v1/horses",{ 
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin
@@ -39,13 +41,14 @@ class Dashboard extends React.Component {
     // console.log(response,"dta is testing");
    }).then(result=>{
      console.log(result)
+     Store.ResponseData = result.data
      this.setState({
       HorseList:result.data
      })
    })
   }
 
-  }
+  
   Create=()=>{
     this.setState({
       PopUp:true
@@ -56,7 +59,7 @@ class Dashboard extends React.Component {
       PopUp:false
     })
   }
-  Removehorse=async(event,parameters)=>{
+  Removehorse= (event,parameters)=>{
     event.preventDefault();
     let id = parameters ;
     // console.log(this.s)
@@ -73,7 +76,7 @@ class Dashboard extends React.Component {
     headers: {
       "Access-Control-Allow-Origin": "*",
       //"Vary":"Authorization,Origin",
-      'Authorization': this.state.AccessToken,
+      'Authorization': bearer,
          'Content-Type': 'application/json',
          "Access-Control-Allow-Headers": "Content-Type" ,
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT, PATCH",
@@ -122,7 +125,7 @@ class Dashboard extends React.Component {
             <div className="flex mt-2 mb-4"><Button className="btn" onClick={this.Create} name="+ Create horse"/>
             <Button className="btn"  onClick={this.Logout} name="Logout" /> 
             </div> 
-           {this.state.HorseList != "" ? <DataTables delete={this.Removehorse}  horse={this.state.HorseList}/>  :" "}
+           {this.state.HorseList != "" ? <DataTables delete={this.Removehorse}  horse={this.state.HorseList}/>  :"...Loading"}
           <Modal  toggle={this.state.PopUp} Closemodal={this.closedModal}/>
            </div>
       </React.Fragment>

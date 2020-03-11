@@ -5,12 +5,17 @@ import INPUT from './Input';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from '../Component/Button';
+import moment from  'moment';
+import {  useToasts } from 'react-toast-notifications'
+ 
+
 
 class Modal extends React.Component {
    
     state={
       startDate:"",
-      age:"",
+      True:false,
+      False:false,
       checkbox_data:false,
         CreateHorse :{ 
          Horsenumber:{ 
@@ -36,47 +41,130 @@ class Modal extends React.Component {
             value:"",
             
           }
-       },
-       radio:{
-         True :{
-          type:"radio",
-          placeholder:"",
-          required:true,
-          name:"True",
-          checked:false
-         },
-         False:{
-          type:"radio",
-          placeholder:"",
-          required:true,
-          name:"False",
-          checked:false
-         }
        }
+       
+       
     }
-    radioverify = (event)=>{
- 
 
-      // this.setState({
-      //   age:event.target.name
-      // })
+     
+    submit = (event)=>{
+      event.preventDefault();
+      let {startDate,True,False,checkbox_data} = this.state ;
+      
+      let status = True == false && False == false ? false : true;
+      
+        if(this.state.CreateHorse.Horsenumber.value == "" || this.state.CreateHorse.Color.value == "" || 
+        startDate == ""  ||status== false || checkbox_data == false ){
+         alert("please fill the value")
+          // toast.error("please fill the value !", {
+          //   position: toast.POSITION.TOP_LEFT
+          // });
+          
+        }
+        else{
+          let age = True == true ? true : False == true ? true :false ;
+          let newDate = moment(startDate).format("YYYY-MM-DD");
+          let data = {
+            "horse_name":"testing",
+            "horse_number":this.state.CreateHorse.Horsenumber.value ,
+            "age_verified":age,
+            "dob":newDate,
+            "color": this.state.CreateHorse.Color.value,
+            "ushja_registered":checkbox_data
+          }
+          const bearer_token =  localStorage.getItem("AccessToken");
+          // console.log(token,"didmount")
+          var bearer = 'Bearer ' + bearer_token;
+          fetch("http://dev.api.staller.show/v1/horses",{ 
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': bearer
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+         }).then((response) => {
+          //  if(response.ok && response.status == 200){
+          //   console.log(response,"vinoth")
+          return response.json();
+          //  }
+          //  else{
+          //   throw new Error('Something went wrong');
+         
+          //  }
+        }).then((data) => {
+          console.log(data,"data");
+          if(data.data.status !== undefined && data.data.status !== ""){
+            this.props.Closemodal();
+          }
+            
+          }).catch(error => {
+                           console.log(error);
+                        })
+         
+        }
     }
-    handleChange = date => {
-    //   moment(date, "YYYY-MM-DD", true).isValid();
-    //   const regex = /^02\/(?:[01]\d|2\d)\/(?:19|20)(?:0[048]|[13579][26]|[2468][048])|(?:0[13578]|10|12)\/(?:[0-2]\d|3[01])\/(?:19|20)\d{2}|(?:0[469]|11)\/(?:[0-2]\d|30)\/(?:19|20)\d{2}|02\/(?:[0-1]\d|2[0-8])\/(?:19|20)\d{2}$/;
-    // if (!regex.test(date)) {
-    //   Status = false;
-    // }
+
+
+    AgeVerified = (e, parameters) => {
+      switch (parameters) {
+        case "True":
+          this.setState({
+            True: !this.state.True,
+            False:false
+          });
+          break;
+          case "False":
+          this.setState({
+            False: !this.state.False,
+            True:false
+          });
+          break;
+          
+        }
+      }
+    handleChange =( date) => {
+      
+    let validateformate =   moment(date, "YYYY-MM-DD", true).isValid();
+    console.log(validateformate,"validateformate")
+    
+    if (typeof date === "string") {
+      date =date.replace(/[^0-9|/]+/g, "");
+    }
+    if(validateformate){
       this.setState({
         startDate: date
       });
+    }
+      
     };
     handlecheckbox= ()=>{
    this.setState({
     checkbox_data:!this.state.checkbox_data
    })
     }
+    
+    horsecreatr = (event)=>{
+    let info = {...this.state.CreateHorse};
+ let userInfoCopy = info;
+ if(event.target.name == "Horsenumber"){
+ userInfoCopy.Horsenumber.value = event.target.value;
+  
+ }
+ if(event.target.name == "Color"){
+  userInfoCopy.Color.value = event.target.value;
+ }
+ this.setState({
+   form:userInfoCopy
+ })  
+}
 render(){
+ console.log(this.state)
 
   let emptyarray = [];
       for (let [key, value] of Object.entries(this.state.CreateHorse)) {
@@ -92,25 +180,37 @@ render(){
           </div>
           </div>
       }) 
-
-      let emptyarrayradio = [];
-      for (let [key, value] of Object.entries(this.state.radio)) {
-        
-   let data = {label:key, output:value}
-   emptyarrayradio.push(data);
-      }
-      let RadioInfo = emptyarrayradio.map((data,index)=>{
-            return  <div className="col-md-6 col-xs-12">
-            <div key={index}  className="">
-           <div> <input   type={data.output.type} checked={data.checked} name={data.output.name} onClick={this.radioverify} className="no-border" />
-           </div>
-           <div>
-             <span className="fontsize">{data.label}</span>
-             </div>
+      let label_structure = [
+        {
+          status: this.state.True,
+          name: "True",
+          lable: "True"
+        },
+        {
+          status: this.state.False,
+          name: "False",
+          lable: "False"
+        }
+       
+      ];
+      let checkbox_design = label_structure.map(data => {
+        return (
+          <div className="col-md-4 pt-3 pb-3">
+            <label class="radio">
+              {data.lable}
+              <input
+                type="radio"
+                onClick={e => this.AgeVerified(e, data.name)}
+                checked={data.status}
+                name={data.name}
+              />
+              <span class="checkround" />
+            </label>
           </div>
-          </div>
-      }) 
+        );
+      });
   
+     
     return(
         <React.Fragment>
           
@@ -135,9 +235,9 @@ render(){
       </div>
       </div>
       <div className="row mt-5">{CreateHorseInfo}</div>
-      <div className="d-flex">
+      <div className="d-flex align-items-center">
         <div className='fontsize'>Age Verified</div>
-            {RadioInfo}
+            {checkbox_design}
       </div>
       
       <div class="container custom-controls mt-3 mb-3 custom-checkbox">

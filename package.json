@@ -10,6 +10,7 @@
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",
     "history": "^4.10.1",
+    "moment": "^2.24.0",
     "react": "^16.13.0",
     "react-app-polyfill": "^1.0.6",
     "react-datepicker": "^2.14.0",
@@ -20,6 +21,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-table": "^7.0.0-rc.16",
+    "react-toast-notifications": "^2.4.0",
+    "react-toastify": "^5.5.0",
     "redux": "^4.0.5",
     "sha512": "0.0.1"
   },

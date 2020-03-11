@@ -9,10 +9,12 @@ import PrivateRoute from './Views/Private';
 import ProtectedPage from  './Views/Dashboard/Dashboard';
 import Login from './Views/Login/Login';
 import history from './Views/history'; 
+import { ToastProvider, useToasts } from 'react-toast-notifications'
 
 function App() {
   return (
      <React.Fragment>
+       <ToastProvider>
        <Router history={history}> 
        <Switch>
        <Route exact path="/" component={Login} />
@@ -21,6 +23,7 @@ function App() {
          
        </Switch>
        </Router>
+       </ToastProvider>
      </React.Fragment>
   );
 }

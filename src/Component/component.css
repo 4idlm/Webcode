@@ -119,3 +119,90 @@ font-size: 12px;
 .custom-controls{
   text-align: left;
 }
+
+
+/* checkbox css */
+/* The radio */
+.radio {
+
+  display: block;
+ position: relative;
+ padding-left: 30px;
+ font-size: 14px;
+ line-height: 1.42857;
+ cursor: pointer;
+ color: #6f6a6a;
+ -webkit-user-select: none;
+ -moz-user-select: none;
+ -ms-user-select: none;
+ user-select: none
+}
+
+/* Hide the browser's default radio button */
+.radio input {
+ position: absolute;
+ opacity: 0;
+ cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkround {
+
+ position: absolute;
+ top: 0px;
+ left: 0;
+ height: 16px;
+ width: 16px;
+ background-color: #fff!important ;
+border: 1px solid #FF4081;
+  border-radius: 100%;
+}
+
+
+/* When the radio button is checked, add a blue background */
+.radio input:checked ~ .checkround {
+  background-color: #FF4081;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkround:after {
+ content: "";
+ position: absolute;
+ display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio input:checked ~ .checkround:after {
+ display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio .checkround:after {
+  left: 1px;
+  top: 1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #FF4081;
+}
+
+/* The check */
+.check {
+ display: block;
+ position: relative;
+ padding-left: 25px;
+ margin-bottom: 12px;
+ padding-right: 15px;
+ cursor: pointer;
+ font-size: 15px;
+ color: #a4a1a1;
+ font-weight: 600;
+ line-height: 1.42857;
+ -webkit-user-select: none;
+ -moz-user-select: none;
+ -ms-user-select: none;
+ user-select: none;
+}
+.darkmode{
+  color:#000;
+}

@@ -9,8 +9,7 @@ export default function Input(props) {
                        rendercomponet = <input type= {props.type} name={props.name}  className={props.name}
                        value ={props.value} onChange={props.onChange} {...props} />
                        break;
-                       case "select-one":
-                          console.log(props,"options") 
+                       case "select-one": 
                        rendercomponet =  <select
                        name={props.name}
                        className={props.className}
