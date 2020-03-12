@@ -22,7 +22,7 @@ class Modal extends React.Component {
            placeholder:"",
            required:true,
            name:"Horsenumber",
-           value:ChunkData.updaterecord.horse_number != undefined ? ChunkData.updaterecord.horse_number : ""
+           value:""
          },
          Color:{ 
             type:"select-one",
@@ -37,7 +37,7 @@ class Modal extends React.Component {
                 {key:'Pink',value:'Pink'}
              ]
             },
-            value:ChunkData.updaterecord.color,
+            value:""
             
           }
        }

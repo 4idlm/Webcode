@@ -209,3 +209,13 @@ border: 1px solid #FF4081;
 .cursor_Css{
  cursor: pointer;
 }
+
+td {
+  color: #ffff;
+}
+th {
+  color: #5a0925;
+}
+tbody{
+  background: #a73f62!important;
+}
