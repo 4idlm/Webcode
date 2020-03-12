@@ -4,15 +4,17 @@ import Button from '../../Component/Button';
 import './Dashboard.css';
 import history from '../history';
 import Modal from '../../Component/Modal';
-import { isMoment } from 'moment';
 import Store from '../../Store';
+import axios from 'axios';
+
 
 class Dashboard extends React.Component {
  
   state =  {
    HorseList : "",
    AccessToken:"",
-   PopUp :false
+   PopUp :false,
+   edit:false
   }
   componentDidMount(){
     const bearer_token =  localStorage.getItem("AccessToken");
@@ -23,13 +25,23 @@ class Dashboard extends React.Component {
         AccessToken :bearer
       })
     }
-    fetch("http://dev.api.staller.show/v1/horses",{ 
+  
+    this.HoreseListApi();
+  
+  }
+
+  HoreseListApi = ()=>{
+    // alert("vinot")
+    const bearer_token =  localStorage.getItem("AccessToken");
+    // console.log(token,"didmount")
+    var bearer = 'Bearer ' + bearer_token;
+    return fetch("http://dev.api.staller.show/v1/horses",{ 
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *same-origin, omit
       headers: {
-        'Authorization': bearer,
+        'Authorization':bearer,
         'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -47,11 +59,11 @@ class Dashboard extends React.Component {
      })
    })
   }
-
   
   Create=()=>{
     this.setState({
-      PopUp:true
+      PopUp:true,
+      edit:false
     })
   }
   closedModal=()=>{
@@ -66,67 +78,66 @@ class Dashboard extends React.Component {
     const bearer_token =  localStorage.getItem("AccessToken");
     // console.log(token,"didmount")
     var bearer = 'Bearer ' + bearer_token;
-    let URL = `http://dev.api.staller.show/v1/horses/`
-    // acvigneshwaranc@gmail.com
-     fetch(URL,{ 
-    method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, *same-origin, omit
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      //"Vary":"Authorization,Origin",
-      'Authorization': bearer,
-         'Content-Type': 'application/json',
-         "Access-Control-Allow-Headers": "Content-Type" ,
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT, PATCH",
-       //'Access-Control-Allow-Credentials': 'true',
-    //  "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie",
-      // "Access-Control-Request-Method":"*",
-     // "Access-Control-Request-Headers":"Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie",
-	 'Content-Type': 'application/json',
-    },
+   // let URL = `http://dev.api.staller.show/v1/horses/102`
+    
+    var config = {
+      headers:   {'Authorization': bearer}
+    };
+    axios.delete(`http://dev.api.staller.show/v1/horses/${id}`,config)
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        this.HoreseListApi();
+      }).catch(error=>{
+        console.log(error,"error")
+      }) 
+  } 
+  
+  UpdateHorse=(event,parameters)=>{
+    event.preventDefault();
+    let id = parameters.id ;
+  //  console.log(parameters,"paramteres") ;
+    Store.updaterecord = parameters;
+   // console.log(parameters,"parameters")
+    this.setState({
+      edit:true,
+      PopUp:true
+    })
+     
+    
+    // console.log(this.s)
+  //   const bearer_token =  localStorage.getItem("AccessToken");
+  //   // console.log(token,"didmount")
+  //   var bearer = 'Bearer ' + bearer_token;
+  //  // let URL = `http://dev.api.staller.show/v1/horses/102`
+    
    
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *client
-    //body: JSON.stringify(data) // body data type must match "Content-Type" header
- }).then((response) => {
-  
-  return response.json();
-  
-}).then((data) => {
- 
-    console.log(data,"delete")
-  }).catch(error => {
-                   console.log(error);
-                })
- 
+     
+  // var config = {
+  //   headers:{'Authorization': bearer}
+  // };
+  //   axios.put(`http://dev.api.staller.show/v1/horses/${id}`,config)
+  //     .then(res => {
+  //       console.log(res);
+  //       console.log(res.data);
+  //     //  this.HoreseListApi();
+  //     }).catch(error=>{
+  //       console.log(error,"error")
+  //     }) 
   }
-   // alert("vint",parameters)
-    // let deleteHorselist = this.state.HorseList;
-    // console.log(deleteHorselist)
-    // let updatehorse = deleteHorselist.splice(parameters,1);
-    // console.log(updatehorse)
-   // this.setState({
-//       HorseList:deleteHorselist
-//     })
-// console.log(this.state.HorseList,"parameters")
-  
   Logout=()=>{
       localStorage.removeItem("AccessToken");
       history.push('/')
   }
     render() {
-      let {HorseList} = this.state
-      
       
       return <React.Fragment>
         <div className="container">
             <div className="flex mt-2 mb-4"><Button className="btn" onClick={this.Create} name="+ Create horse"/>
             <Button className="btn"  onClick={this.Logout} name="Logout" /> 
             </div> 
-           {this.state.HorseList != "" ? <DataTables delete={this.Removehorse}  horse={this.state.HorseList}/>  :"...Loading"}
-          <Modal  toggle={this.state.PopUp} Closemodal={this.closedModal}/>
+           {this.state.HorseList != "" ? <DataTables delete={this.Removehorse} update={this.UpdateHorse} horse={this.state.HorseList}/>  :"...Loading"}
+          <Modal EditButton={this.state.edit} horselist={this.HoreseListApi}    toggle={this.state.PopUp} Closemodal={this.closedModal}/>
            </div>
       </React.Fragment>
     }

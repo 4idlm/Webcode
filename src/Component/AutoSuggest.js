@@ -1,6 +1,7 @@
 import React from 'react';
 import chunkData from '../Store';
 // const axios = require('axios');
+import axios from 'axios';
 
 class Autosuggest extends React.Component{
 
@@ -20,46 +21,28 @@ state={
         }
     }
     Horsename = (event)=>{
-         let value =  event.target.value
+         let value =  event.target.value;
+         const bearer_token =  localStorage.getItem("AccessToken");
+         // console.log(token,"didmount")
+         var bearer = 'Bearer ' + bearer_token;
          this.setState({
             autoSUggetHorse:value
          })
          chunkData.Autosuggestvalue = event.target.value ; 
-       //  let Url = `http://dev.api.staller.show/v1/horses/${value}`;
-
-//          axios.get(Url)
-//   .then(function (response) {
-//     // handle success
-//     console.log(response);
-//   })
-//   .catch(function (error) {
-//     // handle error
-//     console.log(error);
-//   })
-// //         return fetch(Url,{ 
-//       method: 'GET', // *GET, POST, PUT, DELETE, etc.
-//       mode: 'cors', // no-cors, *cors, same-origin
-//       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-//       credentials: 'same-origin', // include, *same-origin, omit
-//       headers: {
-//         'Authorization': this.state.AccessToken,
-       
-//         'Content-Type': 'application/x-www-form-urlencoded',
-//       },
-//       redirect: 'follow', // manual, *follow, error
-//       referrerPolicy: 'no-referrer', // no-referrer, *client
-//       // body: JSON.stringify(data) // body data type must match "Content-Type" header
-//    }).then((response) => {
-//      return response.json();
-//     // console.log(response,"dta is testing");
-//    }).then(result=>{
-//      console.log(result,"autisuggest")
+        let Url = `http://dev.api.staller.show/v1/horses/${value}`;
+        var config = {
+          headers:   {'Authorization': bearer}
+        };
       
-//    })
-//    .catch(error=>{
-//        console.log(error,"erro")
-//    })
-  
+        axios.get(Url,config)
+          .then(res => {
+            console.log(res);
+            console.log(res.data);
+          //  this.HoreseListApi();
+          }).catch(error=>{
+            console.log(error,"error")
+          }) 
+ 
     }
 render(){
 return(<React.Fragment>

@@ -7,9 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Button from '../Component/Button';
 import moment from  'moment';
 import ChunkData from '../Store';
+import axios from 'axios';
  
-
-
 class Modal extends React.Component {
    
     state={
@@ -23,7 +22,7 @@ class Modal extends React.Component {
            placeholder:"",
            required:true,
            name:"Horsenumber",
-           value:""
+           value:ChunkData.updaterecord.horse_number != undefined ? ChunkData.updaterecord.horse_number : ""
          },
          Color:{ 
             type:"select-one",
@@ -38,7 +37,7 @@ class Modal extends React.Component {
                 {key:'Pink',value:'Pink'}
              ]
             },
-            value:"",
+            value:ChunkData.updaterecord.color,
             
           }
        }
@@ -56,10 +55,7 @@ class Modal extends React.Component {
         if(this.state.CreateHorse.Horsenumber.value == "" || this.state.CreateHorse.Color.value == "" || 
         startDate == ""  ||status== false || checkbox_data == false || ChunkData.Autosuggestvalue == "" ){
          alert("please fill the value")
-          // toast.error("please fill the value !", {
-          //   position: toast.POSITION.TOP_LEFT
-          // });
-          
+         
         }
         else{
           let age = True == true ? true : False == true ? true :false ;
@@ -89,18 +85,14 @@ class Modal extends React.Component {
             referrerPolicy: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data) // body data type must match "Content-Type" header
          }).then((response) => {
-          //  if(response.ok && response.status == 200){
-          //   console.log(response,"vinoth")
-          return response.json();
-          //  }
-          //  else{
-          //   throw new Error('Something went wrong');
          
-          //  }
+          return response.json();
+          
         }).then((data) => {
           console.log(data,"data");
           if(data.data.status !== undefined && data.data.status !== ""){
             this.props.Closemodal();
+            this.props.horselist();
           }
             
           }).catch(error => {
@@ -150,6 +142,7 @@ class Modal extends React.Component {
     }
     
     horsecreatr = (event)=>{
+      event.preventDefault();
     let info = {...this.state.CreateHorse};
  let userInfoCopy = info;
  if(event.target.name == "Horsenumber"){
@@ -166,8 +159,51 @@ class Modal extends React.Component {
    form:userInfoCopy
  })  
 }
+
+Update= (event)=>{
+  event.preventDefault();
+ 
+  let {startDate,True,False,checkbox_data} = this.state ;
+  let age = True == true ? true : False == true ? true :false ;
+  let newDate = moment(startDate).format("YYYY-MM-DD");
+  let status = True == false && False == false ? false : true;
+      console.log(ChunkData.Autosuggestvalue,"ChunkData.Autosuggestvalue")
+        if(this.state.CreateHorse.Horsenumber.value == "" || this.state.CreateHorse.Color.value == "" || 
+        startDate == ""  ||status== false || checkbox_data == false || ChunkData.Autosuggestvalue == "" ){
+         alert("please fill the value")
+         
+        }
+        else{
+  let data = {
+    "horse_name":ChunkData.Autosuggestvalue,
+    "horse_number":this.state.CreateHorse.Horsenumber.value ,
+    "age_verified":age,
+    "dob":newDate,
+    "color": this.state.CreateHorse.Color.value,
+    "ushja_registered":checkbox_data
+  }
+ 
+  const bearer_token =  localStorage.getItem("AccessToken");
+   
+  var bearer = 'Bearer ' + bearer_token;
+  const config = { headers: {'Content-Type': 'application/json',
+  'Authorization': bearer} };
+axios.put(`http://dev.api.staller.show/v1/horses/${ChunkData.updaterecord.id}`, data, config).then(response => {
+    console.log(response,"put operation")
+    if(response.status == 200){
+      this.props.Closemodal();
+      this.props.horselist();
+    }
+});
+    
+}
+
+}
+ 
+ 
+
 render(){
- console.log(this.state)
+ console.log(ChunkData.updaterecord,"ChunkData.updaterecord")
 
   let emptyarray = [];
       for (let [key, value] of Object.entries(this.state.CreateHorse)) {
@@ -247,7 +283,7 @@ render(){
         <input type="checkbox" class="custom-control-input" id="customCheck1" onClick={this.handlecheckbox} checked={this.state.checkbox_data}/>
         <label class="custom-control-label fontsizecheckbox" for="customCheck1">You can check this first option</label>
       </div>
-      <Button className="btn"  onClick={this.submit} name="Submit" /> 
+    {this.props.EditButton?<Button className="btn"  onClick={this.Update} name="Update" /> :<Button className="btn"  onClick={this.submit} name="Submit" /> }
     </div>
      
   </div>

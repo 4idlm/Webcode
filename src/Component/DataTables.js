@@ -1,6 +1,7 @@
 import React  from 'react';
 import { FaUserEdit, FaRegTrashAlt} from "react-icons/fa";
 import ChunkData from '../Store';
+import './component.css';
 
 class DataTables  extends React.Component {
     
@@ -13,8 +14,8 @@ class DataTables  extends React.Component {
             <td>{data.horse_number}</td>
             <td>{data.age_verified}</td>
             <td>{data.color}</td>
-            <td><FaUserEdit/></td>
-            <td onClick={(event)=>this.props.delete(event,data.id)}><FaRegTrashAlt/></td>
+            <td className="cursor_Css"  onClick={(event)=>this.props.update(event,data)}><FaUserEdit/></td>
+            <td className="cursor_Css" onClick={(event)=>this.props.delete(event,data.id)}><FaRegTrashAlt/></td>
             </tr>
             }):"...Loading";
         return(
