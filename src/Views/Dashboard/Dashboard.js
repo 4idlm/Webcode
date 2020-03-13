@@ -70,7 +70,8 @@ class Dashboard extends React.Component {
   }
   closedModal=  () =>{
      this.setState({
-      PopUp:false
+      PopUp:false,
+      edit:true
     })
     
 
