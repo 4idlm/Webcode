@@ -12,10 +12,11 @@ import axios from 'axios';
 class Modal extends React.Component {
    
     state={
+      failed:false,
       startDate:"",
       True:false,
       False:false,
-      checkbox_data:false,
+      checkbox_data:false ,
         CreateHorse :{ 
          Horsenumber:{ 
            type:"text",
@@ -102,7 +103,16 @@ class Modal extends React.Component {
         }
     }
 
-
+    static getDerivedStateFromProps(nextProps, prevState){
+      if(nextProps.EditButton == true && prevState.failed == false){
+        
+      prevState.CreateHorse.Horsenumber.value =  nextProps.EditUserInfo.horse_number 
+        return { checkbox_data:true }
+      }
+     else return null;
+   }
+   
+  
     AgeVerified = (e, parameters) => {
       switch (parameters) {
         case "True":
@@ -130,13 +140,16 @@ class Modal extends React.Component {
     }
     if(validateformate){
       this.setState({
+        failed:true,
         startDate: date
       });
     }
       
     };
     handlecheckbox= ()=>{
+     
    this.setState({
+    failed:true,
     checkbox_data:!this.state.checkbox_data
    })
     }
@@ -144,19 +157,21 @@ class Modal extends React.Component {
     horsecreatr = (event)=>{
       event.preventDefault();
     let info = {...this.state.CreateHorse};
- let userInfoCopy = info;
- if(event.target.name == "Horsenumber"){
+ let userInfoCopy = info[event.target.name]
+ console.log(userInfoCopy,"userInfoCopy")
+ if(userInfoCopy.name == "Horsenumber"){
   if (typeof event.target.value === "string") {
     event.target.value = event.target.value.replace(/[^0-9|/]+/g, "");
   }
- userInfoCopy.Horsenumber.value = event.target.value;
+ userInfoCopy.value = event.target.value;
   
  }
- if(event.target.name == "Color"){
-  userInfoCopy.Color.value = event.target.value;
+ if(userInfoCopy.name == "Color"){
+  userInfoCopy.value = event.target.value;
  }
  this.setState({
-   form:userInfoCopy
+  failed:true,
+   form:info
  })  
 }
 
@@ -203,11 +218,11 @@ axios.put(`http://dev.api.staller.show/v1/horses/${ChunkData.updaterecord.id}`, 
  
 
 render(){
- console.log(ChunkData.updaterecord,"ChunkData.updaterecord")
+ console.log("ChunkData.updaterecord",this.props.EditUserInfo)
 
   let emptyarray = [];
       for (let [key, value] of Object.entries(this.state.CreateHorse)) {
-        
+         
    let data = {label:key, output:value}
         emptyarray.push(data);
       }

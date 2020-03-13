@@ -19,7 +19,6 @@ export default function Input(props) {
                        onChange={props.onChange}
                       
                      >
-                        
                        {props.elementConfig.options.map(options => {
                          return (
                            <option key={options.value} value={options.key}>

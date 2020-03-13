@@ -14,7 +14,8 @@ class Dashboard extends React.Component {
    HorseList : "",
    AccessToken:"",
    PopUp :false,
-   edit:false
+   edit:false,
+   ediRecord:""
   }
   componentDidMount(){
     const bearer_token =  localStorage.getItem("AccessToken");
@@ -98,6 +99,9 @@ class Dashboard extends React.Component {
     let id = parameters.id ;
   //  console.log(parameters,"paramteres") ;
     Store.updaterecord = parameters;
+    this.setState({
+      ediRecord:parameters
+    })
    // console.log(parameters,"parameters")
     this.setState({
       edit:true,
@@ -137,7 +141,7 @@ class Dashboard extends React.Component {
             <Button className="btn"  onClick={this.Logout} name="Logout" /> 
             </div> 
            {this.state.HorseList != "" ? <DataTables delete={this.Removehorse} update={this.UpdateHorse} horse={this.state.HorseList}/>  :"...Loading"}
-          <Modal EditButton={this.state.edit} horselist={this.HoreseListApi}    toggle={this.state.PopUp} Closemodal={this.closedModal}/>
+          <Modal EditUserInfo={this.state.ediRecord} EditButton={this.state.edit} horselist={this.HoreseListApi}    toggle={this.state.PopUp} Closemodal={this.closedModal}/>
            </div>
       </React.Fragment>
     }
