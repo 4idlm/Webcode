@@ -3,9 +3,7 @@ import './Login.css';
 import INPUT from '../../Component/Input';
 import sha512 from 'sha512';
 import history from '../history';
- 
-
-// "var sha512 = require('sha512')";
+import axios from 'axios';
 
 class Login extends React.Component {
 
@@ -59,9 +57,10 @@ class Login extends React.Component {
     let info = this.state.form;
     let passwordHash = info.Password.value.trim();
    let hash = sha512(passwordHash);
-   let binarycodecovertToHash = hash.toString('hex')
+   let binarycodecovertToHash = hash.toString('hex');
+   let usermail = info.Username.value.trim();
    let data =  {
-    email: info.Username.value.trim(),
+    email: usermail,
     password: binarycodecovertToHash
   }
    if(info.Username.value == "" && info.Password.value == "" || info.Password.value == "" || info.Password.value == "" ){
@@ -69,39 +68,23 @@ class Login extends React.Component {
    }
 if(info.Password.value != ""  && info.Username.value != "" )
 {
-   
-   fetch("http://dev.api.staller.show/v1/users/login",{ 
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, *same-origin, omit
-    headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *client
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
- }).then((response) => {
-   if(response.ok && response.status == 200){
-    //  console.log(response,"vinoth")
-  return response.json();
-   }
-   else{
-    throw new Error('Something went wrong');
- 
-   }
-}).then((data) => {
-    let token = data.data.access_token;
+  axios.post(`http://dev.api.staller.show/v1/users/login`, data)
+  .then(res => {
+    if(res.status == 200 ){
+      let token = res.data.data.access_token;
     if (typeof(Storage) !== "undefined") {
      localStorage.setItem("AccessToken", token);
      history.push('/protected');
     }
-  }).catch(error => {
-                   console.log(error);
-                })
- 
-  }
+    }
+    console.log(res);
+    console.log(res.data);
+  }).catch(error=>{
+    console.log(error);
+    
+  })
+
+}
   }
     render() {  
        
