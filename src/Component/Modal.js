@@ -55,8 +55,8 @@ class Modal extends React.Component {
       console.log(ChunkData.Autosuggestvalue,"ChunkData.Autosuggestvalue")
         if(this.state.CreateHorse.Horsenumber.value == "" || this.state.CreateHorse.Color.value == "" || 
         startDate == ""  ||status== false || checkbox_data == false || ChunkData.Autosuggestvalue == "" ){
-         alert("please fill the value")
-         
+         alert("please fill the value") ;
+          
         }
         else{
           let age = True == true ? true : False == true ? true :false ;
@@ -105,9 +105,13 @@ class Modal extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState){
       if(nextProps.EditButton == true && prevState.failed == false){
-        
-      prevState.CreateHorse.Horsenumber.value =  nextProps.EditUserInfo.horse_number 
-        return { checkbox_data:true }
+        console.log( nextProps.EditUserInfo.dob," nextProps.EditUserInfo.dob")
+                var RdateFormate =   new Date(nextProps.EditUserInfo.dob);
+      prevState.CreateHorse.Horsenumber.value =  nextProps.EditUserInfo.horse_number
+      prevState.CreateHorse.Color.value =  nextProps.EditUserInfo.color 
+        return { checkbox_data:true , 
+          startDate:  RdateFormate
+        }
       }
      else return null;
    }
@@ -131,7 +135,7 @@ class Modal extends React.Component {
         }
       }
     handleChange =( date) => {
-      
+      console.log(date,"date")
     let validateformate =   moment(date, "YYYY-MM-DD", true).isValid();
     console.log(validateformate,"validateformate")
     
@@ -141,7 +145,7 @@ class Modal extends React.Component {
     if(validateformate){
       this.setState({
         failed:true,
-        startDate: date
+        startDate:date
       });
     }
       
@@ -283,6 +287,7 @@ render(){
         selected={this.state.startDate}
         onChange={this.handleChange}
         dateFormat='yyyy-MM-dd'  
+         
       />
     <label className="DOB_lable">Date Of Birth</label>
           </div>

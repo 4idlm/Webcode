@@ -10,6 +10,7 @@ export default function Input(props) {
                        value ={props.value} onChange={props.onChange} {...props} />
                        break;
                        case "select-one": 
+                       console.log(props.value,"props.value")
                        rendercomponet =  <select
                        name={props.name}
                        className={props.className}
@@ -21,7 +22,7 @@ export default function Input(props) {
                      >
                        {props.elementConfig.options.map(options => {
                          return (
-                           <option key={options.value} value={options.key}>
+                           <option key={options.key} value={options.value}>
                              {options.value}
                            </option>
                          );
