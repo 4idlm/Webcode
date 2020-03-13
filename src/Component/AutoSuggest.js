@@ -2,12 +2,14 @@ import React from 'react';
 import chunkData from '../Store';
 // const axios = require('axios');
 import axios from 'axios';
+ 
 
 class Autosuggest extends React.Component{
 
 state={
     AccessToken:'',
-    autoSUggetHorse:""
+    autoSUggetHorse:"",
+    feild:false
 }
 
     componentDidMount(){
@@ -19,6 +21,24 @@ state={
             AccessToken :bearer
           })
         }
+        
+    }
+    static getDerivedStateFromProps(nextProps, prevState){
+       
+      if(nextProps.edit== true && chunkData.updaterecord!== undefined && chunkData.updaterecord!== "" && prevState.feild == false ){
+         return{
+          autoSUggetHorse:chunkData.updaterecord.horse_name
+         }
+      }
+      else if (nextProps.edit== false && prevState.feild == false){
+ 
+return{
+  autoSUggetHorse:""
+ }
+      }
+      else{
+        return null
+      }
     }
     Horsename = (event)=>{
          let value =  event.target.value;
@@ -26,9 +46,10 @@ state={
          // console.log(token,"didmount")
          var bearer = 'Bearer ' + bearer_token;
          this.setState({
+           feild:true,
             autoSUggetHorse:value
          })
-         chunkData.Autosuggestvalue = event.target.value ; 
+         chunkData.Autosuggestvalue = value  
         let Url = `http://dev.api.staller.show/v1/horses/${value}`;
         var config = {
           headers:   {'Authorization': bearer}
@@ -39,11 +60,33 @@ state={
             console.log(res);
             console.log(res.data);
           //  this.HoreseListApi();
-          }).catch(error=>{
-            console.log(error,"error")
-          }) 
+          }).catch((error) => {
+            // Error 😨
+            if (error.response) {
+                /*
+                 * The request was made and the server responded with a
+                 * status code that falls out of the range of 2xx
+                 */
+               // this.props.Closemodal();
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
  
     }
+     
 render(){
 return(<React.Fragment>
      <div  className="form-group">

@@ -62,15 +62,18 @@ class Dashboard extends React.Component {
   }
   
   Create=()=>{
+    Store.autoSUggetHorse = ""
     this.setState({
       PopUp:true,
       edit:false
     })
   }
-  closedModal=()=>{
-    this.setState({
+  closedModal=  () =>{
+     this.setState({
       PopUp:false
     })
+    
+
   }
   Removehorse= (event,parameters)=>{
     event.preventDefault();

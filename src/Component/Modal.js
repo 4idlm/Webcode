@@ -96,22 +96,69 @@ class Modal extends React.Component {
             this.props.horselist();
           }
             
-          }).catch(error => {
-                           console.log(error);
-                        })
+          }).catch((error) => {
+            // Error 😨
+            if (error.response) {
+                /*
+                 * The request was made and the server responded with a
+                 * status code that falls out of the range of 2xx
+                 */
+                this.props.Closemodal();
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                /*
+                 * The request was made but no response was received, `error.request`
+                 * is an instance of XMLHttpRequest in the browser and an instance
+                 * of http.ClientRequest in Node.js
+                 */
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request and triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
          
         }
     }
-
-    static getDerivedStateFromProps(nextProps, prevState){
+   static getDerivedStateFromProps(nextProps, prevState){
       if(nextProps.EditButton == true && prevState.failed == false){
-        console.log( nextProps.EditUserInfo.dob," nextProps.EditUserInfo.dob")
+       // console.log( nextProps.EditUserInfo.dob," nextProps.EditUserInfo.dob")
                 var RdateFormate =   new Date(nextProps.EditUserInfo.dob);
       prevState.CreateHorse.Horsenumber.value =  nextProps.EditUserInfo.horse_number
       prevState.CreateHorse.Color.value =  nextProps.EditUserInfo.color 
-        return { checkbox_data:true , 
+    let status =   nextProps.EditUserInfo.age_verified == 1 ? true : false
+    if(status == true){
+      return {  
+        True:true,
+      False:false,
+      checkbox_data:true , 
           startDate:  RdateFormate
-        }
+      }
+    }
+    else{
+      return {  
+        True:false,
+      False:true,
+      checkbox_data:true , 
+          startDate:  RdateFormate
+      }
+    }
+        // return { checkbox_data:true , 
+        //   startDate:  RdateFormate
+        // }
+      }
+      else if(nextProps.EditButton == false && prevState.failed == false){
+        prevState.CreateHorse.Horsenumber.value =  ""
+        prevState.CreateHorse.Color.value =  ""
+       return{
+          True:false,
+        False:false,
+        checkbox_data:false , 
+            startDate:  ""
+       }
       }
      else return null;
    }
@@ -121,12 +168,14 @@ class Modal extends React.Component {
       switch (parameters) {
         case "True":
           this.setState({
+            failed:true,
             True: !this.state.True,
             False:false
           });
           break;
           case "False":
           this.setState({
+            failed:true,
             False: !this.state.False,
             True:false
           });
@@ -162,7 +211,7 @@ class Modal extends React.Component {
       event.preventDefault();
     let info = {...this.state.CreateHorse};
  let userInfoCopy = info[event.target.name]
- console.log(userInfoCopy,"userInfoCopy")
+ 
  if(userInfoCopy.name == "Horsenumber"){
   if (typeof event.target.value === "string") {
     event.target.value = event.target.value.replace(/[^0-9|/]+/g, "");
@@ -186,9 +235,9 @@ Update= (event)=>{
   let age = True == true ? true : False == true ? true :false ;
   let newDate = moment(startDate).format("YYYY-MM-DD");
   let status = True == false && False == false ? false : true;
-      console.log(ChunkData.Autosuggestvalue,"ChunkData.Autosuggestvalue")
+       console.log(ChunkData.Autosuggestvalue ,"ChunkData.Autosuggestvalue ")
         if(this.state.CreateHorse.Horsenumber.value == "" || this.state.CreateHorse.Color.value == "" || 
-        startDate == ""  ||status== false || checkbox_data == false || ChunkData.Autosuggestvalue == "" ){
+        startDate == ""  ||status== false || checkbox_data == false  ){
          alert("please fill the value")
          
         }
@@ -213,6 +262,29 @@ axios.put(`http://dev.api.staller.show/v1/horses/${ChunkData.updaterecord.id}`, 
       this.props.Closemodal();
       this.props.horselist();
     }
+}).catch((error) => {
+  // Error 😨
+  if (error.response) {
+      /*
+       * The request was made and the server responded with a
+       * status code that falls out of the range of 2xx
+       */
+      this.props.Closemodal();
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+  } else if (error.request) {
+      /*
+       * The request was made but no response was received, `error.request`
+       * is an instance of XMLHttpRequest in the browser and an instance
+       * of http.ClientRequest in Node.js
+       */
+      console.log(error.request);
+  } else {
+      // Something happened in setting up the request and triggered an Error
+      console.log('Error', error.message);
+  }
+  console.log(error.config);
 });
     
 }
@@ -222,8 +294,6 @@ axios.put(`http://dev.api.staller.show/v1/horses/${ChunkData.updaterecord.id}`, 
  
 
 render(){
- console.log("ChunkData.updaterecord",this.props.EditUserInfo)
-
   let emptyarray = [];
       for (let [key, value] of Object.entries(this.state.CreateHorse)) {
          
@@ -280,7 +350,7 @@ render(){
       <span class="close" onClick={this.props.Closemodal}>&times;</span>
     </div>
     <div class="modal-body mt-4 container">
-     <div className="row"><div className="col-md-6"><Autosuggest /></div> 
+     <div className="row"><div className="col-md-6"><Autosuggest edit={this.props.EditButton}/></div> 
      <div className="col-md-6"> 
      <div   className=" form-group">
      <DatePicker
