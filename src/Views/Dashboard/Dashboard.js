@@ -71,7 +71,7 @@ class Dashboard extends React.Component {
   closedModal=  () =>{
      this.setState({
       PopUp:false,
-      edit:true
+      edit:false
     })
     
 
@@ -145,7 +145,7 @@ class Dashboard extends React.Component {
             <Button className="btn"  onClick={this.Logout} name="Logout" /> 
             </div> 
            {this.state.HorseList != "" ? <DataTables delete={this.Removehorse} update={this.UpdateHorse} horse={this.state.HorseList}/>  :"...Loading"}
-          <Modal EditUserInfo={this.state.ediRecord} EditButton={this.state.edit} horselist={this.HoreseListApi}    toggle={this.state.PopUp} Closemodal={this.closedModal}/>
+          {this.state.PopUp?<Modal EditUserInfo={this.state.ediRecord} EditButton={this.state.edit} horselist={this.HoreseListApi}    toggle={this.state.PopUp} Closemodal={this.closedModal}/>:""}
            </div>
       </React.Fragment>
     }
