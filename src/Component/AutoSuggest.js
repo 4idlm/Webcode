@@ -26,7 +26,8 @@ state={
     static getDerivedStateFromProps(nextProps, prevState){
        
       if(nextProps.edit== true && chunkData.updaterecord!== undefined && chunkData.updaterecord!== "" && prevState.feild == false ){
-         return{
+        console.log(chunkData.updaterecord.horse_name,"chunkData.updaterecord.horse_name")
+        return{
           autoSUggetHorse:chunkData.updaterecord.horse_name
          }
       }
@@ -41,6 +42,7 @@ return{
       }
     }
     Horsename = (event)=>{
+      event.preventDefault();
          let value =  event.target.value;
          const bearer_token =  localStorage.getItem("AccessToken");
          // console.log(token,"didmount")
@@ -49,7 +51,9 @@ return{
            feild:true,
             autoSUggetHorse:value
          })
-         chunkData.Autosuggestvalue = value  
+          
+          chunkData.Autosuggestvalue = value
+         
         let Url = `http://dev.api.staller.show/v1/horses/${value}`;
         var config = {
           headers:   {'Authorization': bearer}
@@ -90,7 +94,7 @@ return{
 render(){
 return(<React.Fragment>
      <div  className="form-group">
-            <input  type="text" name="" value={this.state.autoSUggetHorse} onChange={this.Horsename} maxLength="255" className="form-control" />
+            <input  type="text" name="automatch" value={this.state.autoSUggetHorse} onChange={this.Horsename} maxLength="255" className="form-control" />
             <label className="form-label">Horse Name</label>
           </div>
 </React.Fragment>)

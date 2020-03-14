@@ -242,8 +242,15 @@ Update= (event)=>{
          
         }
         else{
+          let Namrhorse ;
+          if(ChunkData.Autosuggestvalue != ""){
+           Namrhorse =  ChunkData.Autosuggestvalue 
+          }
+          else{
+             Namrhorse = ChunkData.updaterecord.horse_name 
+          }
   let data = {
-    "horse_name":ChunkData.Autosuggestvalue,
+    "horse_name":Namrhorse,
     "horse_number":this.state.CreateHorse.Horsenumber.value ,
     "age_verified":age,
     "dob":newDate,
@@ -259,6 +266,7 @@ Update= (event)=>{
 axios.put(`http://dev.api.staller.show/v1/horses/${ChunkData.updaterecord.id}`, data, config).then(response => {
     console.log(response,"put operation")
     if(response.status == 200){
+      ChunkData.Autosuggestvalue  = ""
       this.props.Closemodal();
       this.props.horselist();
     }
